@@ -134,9 +134,9 @@ $ docker run -p you_port:5000 pubai
 | email           | User's email address (unique).                      |
 | password_hash   | Hashed password for user authentication.            |
 | phone_number    | User's phone number.                                |
-| date            | Date of the operation.                              |
-| time            | Time of the operation.                              |
-
+| date            | Date of the account creation.                       |
+| time            | Time of the account creation.                       |
+| points          | The points of user                                  |
 ---
 
 
@@ -261,7 +261,53 @@ $ docker run -p you_port:5000 pubai
     }
     ```
 
-    
+  
+
+### Add Points to User
+
+- **URL**: `PUT /api/users/points/add`
+- **Description**: Add points to a user's account.
+- **Request Body**:
+  - `points` (integer, form parameter): The number of points to add. Defaults to 0 if not provided.
+  - `access_token` (string, form parameter): The JWT access token for authentication.
+- **Response**:
+  - **Status Code**: 200 OK
+  - **Response Body**:
+    ```json
+    {
+        "message": "{points} points added to {username} successfully"
+    }
+    ```
+    - `message` (string): Confirmation message indicating how many points were added to which user's account.
+
+  - **Errors**:
+    - **403 Forbidden**: If `points` is negative.
+    - **401 Unauthorized**: If the access token is missing, invalid, or the user cannot be authenticated.
+
+
+
+### Deduct Points from User
+
+- **URL**: `PUT /api/users/points/deduct`
+- **Description**: Deduct points from a user's account.
+- **Request Body**:
+  - `points` (integer, form parameter): The number of points to deduct. Defaults to 0 if not provided.
+  - `access_token` (string, form parameter): The JWT access token for authentication.
+- **Response**:
+  - **Status Code**: 200 OK
+  - **Response Body**:
+    ```json
+    {
+        "message": "{points} points deducted from {username} successfully"
+    }
+    ```
+    - `message` (string): Confirmation message indicating how many points were deducted from which user's account.
+
+  - **Errors**:
+    - **403 Forbidden**: If `points` is negative.
+    - **401 Unauthorized**: If the access token is missing, invalid, or the user cannot be authenticated.
+    - **401 Unauthorized**: If the user has insufficient points to deduct the specified amount.
+
 
 ## Stay in touch :
 - Author - [Ouail Laamiri](https://www.linkedin.com/in/ouaillaamiri/)

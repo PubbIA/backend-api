@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String,Numeric
 from passlib.hash import sha256_crypt
 from cryptography.fernet import Fernet  # For encryption
 import os
@@ -24,6 +24,7 @@ class User(Base):
         phone_number (str): User's phone number.
         date (str): Date of the operation.
         time (str): Time of the operation.
+        points (int): User's points.
         avatar_base64 (str): Base64 encoded avatar image.
     """
 
@@ -36,8 +37,9 @@ class User(Base):
     email = Column(String(55),unique=True)
     password_hash = Column(String(255))
     phone_number = Column(String(255))
-    date = Column(String(55))
-    time = Column(String(55))
+    points = Column(Numeric(2), default=0)
+    date = Column(String(55), default=str(datetime.date.today()))
+    time = Column(String(55), default=str(datetime.datetime.now().time()))
     # Define the relationship to the Operations table
     def set_password(self, password:str)->None:
         """
@@ -99,8 +101,6 @@ class User(Base):
             username=username,
             email=email,
             phone_number=phone_number,
-            date=str(datetime.date.today()),  # Add current date
-            time=str(datetime.datetime.now().time())  # Add current time
         )
         # Set password and email password
         new_user.set_password(password)
