@@ -261,7 +261,32 @@ $ docker run -p you_port:5000 pubai
     }
     ```
 
-  
+
+### Get User Information
+
+- **URL**: `GET /api/users`
+- **Description**: Retrieve user information based on the provided access token.
+- **Request Parameters**:
+  - `access_token` (string, form parameter): The JWT access token for authentication.
+- **Response**:
+  - **Status Code**: 200 OK
+  - **Response Body**:
+    ```json
+    {
+        "username": "User's username",
+        "email": "User's email address",
+        "phone_number": "User's phone number",
+        "points": "User's current points"
+    }
+    ```
+    - `username` (string): Username of the authenticated user.
+    - `email` (string): Email address of the authenticated user.
+    - `phone_number` (string): Phone number of the authenticated user.
+    - `points` (integer): Current points of the authenticated user.
+
+  - **Errors**:
+    - **401 Unauthorized**: If the access token is missing, invalid, or the user cannot be authenticated.
+
 
 ### Add Points to User
 

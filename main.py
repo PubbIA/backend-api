@@ -180,7 +180,19 @@ def change_password(
     # Update the user in the database    
     return {"message": "Password changed successfully"}
 
-
+@api_router.get("/users")
+def get_user_by_access_token_(
+    access_token: str= Form(...)
+    ):
+    # Get the user from the database
+    decode_token:dict=decode_access_token(access_token,JWT_SECRET_KEY,ALGORITHM)
+    if not decode_token["valid"]:
+        raise HTTPException(status_code=401, detail="Invalid access token")
+    user_id:str=decode_token["user_id"]
+    user:User|None=User.get_user_by_id(session,user_id)
+    if user is None:
+        raise HTTPException(status_code=401, detail="Invalid access token")
+    return {"username":user.username,"email":user.email,"phone_number":user.phone_number,"points":user.points}
 
 
 
@@ -189,7 +201,7 @@ def add_points(
     points: int= Form(0),
     access_token: str= Form(...)
     ):
-    
+
     # Check if points is less than zero to raise an appropriate error
     if points < 0:
         raise HTTPException(status_code=403, detail="Points cannot be negative")
