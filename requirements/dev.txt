@@ -1,16 +1,23 @@
 # Fast API
-uvicorn
-fastapi[all]
-python-multipart
+uvicorn==0.30.1
+fastapi[all]==0.111.0
+python-multipart==0.0.9
 # Database
-sqlalchemy
+sqlalchemy==2.0.31
 # Cryptography and Security
-passlib
-cryptography
+passlib==1.7.4
+cryptography==42.0.8
 # Environment
-python-dotenv
+python-dotenv==1.0.1
 # JWT
-python-jose
+python-jose==3.3.0
 
 # mysql
-mysql-connector-python
+mysql-connector-python==8.4.0
+
+tensorflow
+#==2.16.2
+
+h5py==3.11.0
+opencv-python==4.10.0.84
+numpy==2.0.0
