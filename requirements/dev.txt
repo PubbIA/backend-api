@@ -1,0 +1,16 @@
+# Fast API
+uvicorn
+fastapi[all]
+python-multipart
+# Database
+sqlalchemy
+# Cryptography and Security
+passlib
+cryptography
+# Environment
+python-dotenv
+# JWT
+python-jose
+
+# mysql
+mysql-connector-python
