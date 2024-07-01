@@ -21,3 +21,10 @@ tensorflow
 h5py==3.11.0
 opencv-python==4.10.0.84
 numpy==2.0.0
+
+
+## google drive
+google-api-python-client==2.135.0 
+google-auth-oauthlib==1.2.0 
+google-auth-httplib2==0.2.0 
+google-auth==2.31.0 
