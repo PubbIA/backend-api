@@ -15,7 +15,7 @@ import io
 from googleapiclient.errors import HttpError
 
 scope = ['https://www.googleapis.com/auth/drive']
-service_account_json_key = 'drive/credentials.json'
+service_account_json_key = 'google-drive/credentials.json'
 credentials = service_account.Credentials.from_service_account_file(
                               filename=service_account_json_key,
                               scopes=scope)

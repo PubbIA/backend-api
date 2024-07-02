@@ -1,5 +1,5 @@
 # Fast API
-uvicorn==0.30.1
+uvicorn
 fastapi[all]==0.111.0
 python-multipart==0.0.9
 # Database
@@ -15,12 +15,6 @@ python-jose==3.3.0
 # mysql
 mysql-connector-python==8.4.0
 
-tensorflow
-#==2.16.2
-
-h5py==3.11.0
-opencv-python==4.10.0.84
-numpy==2.0.0
 
 
 ## google drive
@@ -28,3 +22,10 @@ google-api-python-client==2.135.0
 google-auth-oauthlib==1.2.0 
 google-auth-httplib2==0.2.0 
 google-auth==2.31.0 
+
+
+tensorflow
+tensorflow-cpu
+h5py==3.11.0
+opencv-python==4.10.0.84
+numpy<2.0.0

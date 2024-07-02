@@ -1,32 +1,49 @@
-import os
-import sys
-parent_dir = os.path.abspath(os.path.join(os.getcwd(), '.'))
-sys.path.append(parent_dir)
-import tensorflow as tf
-import cv2
 import numpy as np
+import cv2
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.image import img_to_array, load_img
 
+# Function to load the model
+def load_trained_model(model_path):
+    model = load_model(model_path)
+    return model
 
-PATH_TO_MODEL = "AI/CNN/garbage_classifier/garbage_classifier.h5"
+# Function to preprocess a single image for prediction
+def preprocess_image(image_path, target_size=(224, 224)):
+    img = load_img(image_path, target_size=target_size)
+    img_array = img_to_array(img)
+    img_array = img_array / 255.0  # Normalize the image
+    img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
+    return img_array
 
+# Function to predict the class of an image
+def predict(image_path, labels):
+    model_path = 'AI/CNN/garbage_classifier/garbage_classifier.h5'  # Path to your trained model
+    labels_:dict={"cardboard":0,"glass":2,"metal":3,"paper":1,"plastic":5,"trash":4}
 
+    labels = {value:key for key,value in labels_.items()}  # Path to your labels file
 
-# Load the model
-model = tf.keras.models.load_model(PATH_TO_MODEL)
-
-
-CLASSES = {"cardboard":0,"glass":2,"metal":3,"paper":1,"plastic":5,"trash":4}
-SIZE = 224
-
-def predict(path_to_image):
-    img = cv2.imread(path_to_image)
-    if img is not None:
-        img = cv2.resize(img, 224)  # Resize images to 224x224
-    # Assuming X_train[0] is the first image in your training data
-    image_to_predict = np.expand_dims(img, axis=0)  # Add batch dimension if necessary
-
-    # Make predictions
-    predictions = model.predict(image_to_predict)
+    # Load model
+    model = load_trained_model(model_path)
+    img_array = preprocess_image(image_path)
+    predictions = model.predict(img_array)
     predicted_class = np.argmax(predictions[0])
-    classes = {value:key for key,value in CLASSES.items()}
-    return classes[predicted_class]
+    return labels[predicted_class]
+
+
+
+
+if __name__=="__main__":
+    model_path = 'AI/CNN/garbage_classifier/garbage_classifier.h5'  # Path to your trained model
+    labels_:dict={"cardboard":0,"glass":2,"metal":3,"paper":1,"plastic":5,"trash":4}
+
+    labels = {value:key for key,value in labels_.items()}  # Path to your labels file
+
+    # Load model
+    model = load_trained_model(model_path)
+    # Example image path for prediction
+    image_path = 'AI/CNN/garbage_classifier/plastique.jpeg'
+
+    # Predict class
+    predicted_label = predict_class(model, image_path, labels)
+    print(f'Predicted Class: {predicted_label}')
