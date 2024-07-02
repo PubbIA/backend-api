@@ -40,6 +40,7 @@ class User(Base):
     points = Column(Numeric(2), default=0)
     date = Column(String(55), default=str(datetime.date.today()))
     time = Column(String(55), default=str(datetime.datetime.now().time()))
+    profile_image = Column(String(400),default="")
     # Define the relationship to the Operations table
     def set_password(self, password:str)->None:
         """

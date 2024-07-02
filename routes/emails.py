@@ -50,4 +50,3 @@ async def send_verification_email_code(to: str = Form(...),language:str = Form("
 
     return {"code":(code_generated if is_send else "")}  
     
-

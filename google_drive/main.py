@@ -24,7 +24,7 @@ service = build('drive', 'v3', credentials=credentials)
 def is_valid_format(file_name: str,VALID_FORMATS:list) -> bool:
     _, file_extension = os.path.splitext(file_name)
     return file_extension.lower()[1:] in VALID_FORMATS
-def upload_file_to_drive(file_path, folder_name,VALID_FORMATS:list):
+def upload_file_to_drive(file_path, folder_name,VALID_FORMATS:list=['jpg', 'jpeg', 'png']):
     if not is_valid_format(os.path.basename(file_path),VALID_FORMATS):
         return None  # Invalid format
     # Get the ID of the target folder
@@ -78,10 +78,8 @@ def upload_file_to_drive(file_path, folder_name,VALID_FORMATS:list):
         return None
 
 
-def upload_file_to_drive_url(file_path:str, folder_name:str,VALID_FORMATS:list):
-    # Call the function to upload the file to Google Drive
-    file_url = upload_file_to_drive(file_path, folder_name,VALID_FORMATS)
-    if file_url:
-        return JSONResponse(content={"file_url": file_url}, status_code=200)
-    else:
-        return JSONResponse(content={"error": "Failed to upload file"}, status_code=500)
+
+    
+if __name__=="__main__":
+   # print(upload_file_to_drive_url("docs/api-image.png","pubai",['jpg', 'jpeg', 'png']))
+   pass
