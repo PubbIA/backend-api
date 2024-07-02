@@ -10,7 +10,19 @@ from fastapi import (
 from fastapi.middleware.cors import CORSMiddleware
 from routes import users,emails,AI
 
-app = FastAPI()
+# Define API information
+api_info = {
+    "title": "Poubbelle Intelligente API",
+    "description": "This API serves as the backend for the Smart Trash Bin project. It provides endpoints for user management, email notifications, and AI functionalities.",
+    "version": "1.0.0",
+    "contact": {
+        "name": "LAAMIRI Ouail",
+        "email": "laamiriouail@gmail.com"
+    }
+}
+
+# Create FastAPI instance with title, description, and author information
+app = FastAPI(**api_info)
 
 # Set up CORS
 app.add_middleware(
