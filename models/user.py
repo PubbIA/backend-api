@@ -41,6 +41,7 @@ class User(Base):
     date = Column(String(55), default=str(datetime.date.today()))
     time = Column(String(55), default=str(datetime.datetime.now().time()))
     profile_image = Column(String(400),default="")
+    location = Column(String(400),default="")
     
     # Define the relationship to the Operations table
     def set_password(self, password:str)->None:
@@ -82,7 +83,7 @@ class User(Base):
         return decrypted_password
 
     @classmethod
-    def create_user(cls, session, username:str, email:str, password:str, phone_number:str,profile_image:str,id_:str, encryption_key:str)->bool:
+    def create_user(cls, session, username:str, email:str, password:str, phone_number:str,profile_image:str,id_:str,location:str, encryption_key:str)->bool:
         """
         Create a new user and add them to the database.
 
@@ -104,7 +105,8 @@ class User(Base):
             username=username,
             email=email,
             phone_number=phone_number,
-            profile_image=profile_image if profile_image else ""
+            profile_image=profile_image if profile_image else "",
+            location = location if location else ""
         )
         # Set password and email password
         new_user.set_password(password)

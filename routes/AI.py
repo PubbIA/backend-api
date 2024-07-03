@@ -45,7 +45,7 @@ async def save_image(image: UploadFile = File(...)):
     return {"class": predicted_class}
 
 @router.get("/face-recognition")
-async def get_user():
+async def check_between_photo_and_all_user_profiles():
     """
     {
         "exist":boolean,
@@ -55,7 +55,7 @@ async def get_user():
     pass
 
 @router.post("/face-recognition/check")
-async def get_user(access_token:str=Form(...)):
+async def check_between_photo_and_user_profile(access_token:str=Form(...)):
     pass
 
 @router.post("/chat/recyclage")
