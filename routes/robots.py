@@ -20,7 +20,7 @@ from routes import (
 from models.robot import Robot
 
 from typing import Union
-
+from models.logs import RobotLog
 
 # Create a router for API endpoints
 router = APIRouter()
@@ -39,13 +39,19 @@ async def create_robot_(robotname: str = Form(...),password:str = Form(...),lali
 
 
 @router.put("/update-position")
-async def create_robot_(robotname: str = Form(...),new_lalitude:float=Form(...),new_longitude:float=Form(...)):
+async def update_robot_position_(robotname: str = Form(...),new_lalitude:float=Form(...),new_longitude:float=Form(...)):
 
     robot:Robot|None=Robot.get_robot_by_robotname(session,robotname)
     if robot is None:
         raise HTTPException(status_code=401, detail=f"Invalid robotname {robotname} token")
     robot.lalitude = new_lalitude
     robot.longitude = new_longitude
+    RobotLog.create_log(
+        session=session,
+        robot_id=robot.id,
+        operation="update-robot position",
+        details=f"longitude : {robot.lalitude} , longitude = {robot.longitude}"
+    )
     session.commit()
     
     # Update the robot in the database    
@@ -53,7 +59,7 @@ async def create_robot_(robotname: str = Form(...),new_lalitude:float=Form(...),
 
 
 @router.get("/")
-def get_user_by_robotname_(
+def get_robot_by_robotname_(
     robotname: str= Form(...)
     ):
     robot:Robot|None=Robot.get_robot_by_robotname(session,robotname)
@@ -62,7 +68,34 @@ def get_user_by_robotname_(
     return {"lalitude":robot.lalitude,"longitude":robot.longitude,"robotname":robot.robotname}
 
 
-@app.put("/update-info")
+
+
+@router.get("/all")
+async def get_all_robots():
+    robots = Robot.get_all_robots_without_logs(session)
+    # Convert robots to a list of dictionaries to exclude logs in the response
+    robots_response = [
+        {
+            "id": robot.id,
+            "robotname": robot.robotname,
+            "date": robot.date,
+            "time": robot.time,
+            "lalitude": robot.lalitude,
+            "longitude": robot.longitude,
+            "power": robot.power,
+            "plastique_percentage": robot.plastique_percentage,
+            "trash_percentage": robot.trash_percentage,
+            "cardboard_percentage": robot.cardboard_percentage
+        }
+        for robot in robots
+    ]
+    return robots_response
+
+
+
+
+
+@router.put("/update-info")
 async def update_robot_info(
     robotname: str = Form(...),
     power: Union[int, None] = Form(None),
@@ -85,6 +118,12 @@ async def update_robot_info(
     )
     
     if success:
+        RobotLog.create_log(
+            session=session,
+            robot_id=robot.id,
+            operation="update-info",
+            details=f"plastique_percentage : {plastique_percentage}, trash_percentage={trash_percentage}, cardboard_percentage : {cardboard_percentage}, power : {power}"
+        )
         return {"message": "Robot updated successfully"}
     else:
         raise HTTPException(status_code=500, detail="Failed to update robot")

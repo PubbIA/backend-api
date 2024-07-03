@@ -8,7 +8,7 @@ from fastapi import (
                     )   
 
 from fastapi.middleware.cors import CORSMiddleware
-from routes import users,emails,AI,google_drive,cashback
+from routes import users,emails,AI,google_drive,cashback,robots
 
 # Define API information
 api_info = {
@@ -40,3 +40,4 @@ app.include_router(emails.router,prefix="/api/email", tags=["Email"])
 app.include_router(AI.router,prefix="/api/ai", tags=["ai"])
 app.include_router(cashback.router,prefix="/api/cashback", tags=["Cashback"])
 app.include_router(google_drive.router,prefix="/api/google-drive", tags=["Google drive"])
+app.include_router(robots.router,prefix="/api/robots", tags=["Robot"])

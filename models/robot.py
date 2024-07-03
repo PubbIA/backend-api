@@ -4,11 +4,13 @@ from passlib.hash import sha256_crypt
 from cryptography.fernet import Fernet  # For encryption
 import os
 import sys
-from typing import Union
+from typing import Union,List
 parent_dir = os.path.abspath(os.path.join(os.getcwd(), '.'))
 sys.path.append(parent_dir)
 from database import Base
 import datetime
+from sqlalchemy.orm import relationship
+from models.logs import RobotLog
 
 
 # Define User model
@@ -27,7 +29,8 @@ class Robot(Base):
     plastique_percentage = Column(Numeric(3),default=0)
     trash_percentage = Column(Numeric(3),default=0)
     cardboard_percentage = Column(Numeric(3),default=0)
-    
+    logs = relationship("RobotLog", back_populates="robot")
+
     # Define the relationship to the Operations table
     def set_password(self, password:str)->None:
         """
@@ -54,7 +57,7 @@ class Robot(Base):
         return sha256_crypt.verify(password, self.password_hash)
     
     @classmethod
-    def create_robot(cls, session: Session, robotname: str, password: str, lalitude: float, longitude: float) -> bool:
+    def create_robot(cls, session, robotname: str, password: str, lalitude: float, longitude: float) -> bool:
         # Check if a robot with the given name already exists
         # Set a default robotname if not provided
         if not robotname:
@@ -74,8 +77,6 @@ class Robot(Base):
         )
         # Set password and email password
         new_robot.set_password(password)
-
-        # Add the robot to the database
         session.add(new_robot)
         session.commit()
         return True
@@ -94,7 +95,7 @@ class Robot(Base):
         return session.query(cls).filter(cls.robotname == robotname).first()
 
     
-    def update_robot(self, session: Session, power: Union[int, None] = None, plastique_percentage: Union[int, None] = None,
+    def update_robot(self, session, power: Union[int, None] = None, plastique_percentage: Union[int, None] = None,
                      trash_percentage: Union[int, None] = None, cardboard_percentage: Union[int, None] = None) -> bool:
         """
         Update the robot's power and percentages if the provided values are not None.
@@ -108,6 +109,7 @@ class Robot(Base):
         Returns:
             bool: True if the robot was updated, False otherwise.
         """
+        operation = []
         if power is not None:
             self.power = power
         if plastique_percentage is not None:
@@ -117,8 +119,17 @@ class Robot(Base):
         if cardboard_percentage is not None:
             self.cardboard_percentage = cardboard_percentage
 
+        # Create a log entry
+        log_entry = RobotLog(
+            robot_id=self.id,
+            operation="update robot info",
+            details=f"power={power}, plastique_percentage={plastique_percentage}, trash_percentage={trash_percentage}, cardboard_percentage={cardboard_percentage}"
+        )
+        session.add(log_entry)
         session.commit()
         return True
 
-
+    @classmethod
+    def get_all_robots_without_logs(cls, session) -> List['Robot']:
+        return session.query(cls).all()
 
