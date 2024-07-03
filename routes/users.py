@@ -59,7 +59,8 @@ async def create_user(
     password: str = Form(...),
     phone_number: str = Form(...),
     user_profile:UploadFile=File(None),
-    location : str = Form("")
+    lalitude : float = Form(0),
+    longitude : float = Form(0),
 ):
     """
     Create a new user.
@@ -91,7 +92,7 @@ async def create_user(
                 if result:
                     # Remove the temporary image file
                     profile_image_url = upload_file_to_drive(Path(f"temp/{user_profile.filename}"),"pubai")
-                    is_created:bool=User.create_user(session,username, email, password, phone_number,profile_image_url,id_,location,FERNET_KEY)
+                    is_created:bool=User.create_user(session,username, email, password, phone_number,profile_image_url,id_,lalitude,longitude,FERNET_KEY)
                     if is_created:
                         os.remove(f"temp/{user_profile.filename}")
                         return {"message": "User created successfully"}
@@ -102,7 +103,7 @@ async def create_user(
                 return HTTPException(status_code=400,detail="The image profile not respect the requirements")
         else:
             # Save user to database
-            is_created:bool=User.create_user(session,username, email, password, phone_number,None,None,location,FERNET_KEY)
+            is_created:bool=User.create_user(session,username, email, password, phone_number,None,None,lalitude,longitude,FERNET_KEY)
         if not is_created:
             raise UserExistException(f"User already exist with this email {email} or you have a problem in connexion")
         
@@ -167,12 +168,14 @@ def get_user_by_access_token_(
     if user is None:
         raise HTTPException(status_code=401, detail="Invalid access token")
     return {"username":user.username,"email":user.email,"phone_number":user.phone_number,
-            "points":user.points,"profile_image":user.profile_image,"location":user.location}
+            "points":user.points,"profile_image":user.profile_image,"lalitude":user.lalitude,
+            "longitude":user.longitude}
 
 
 @router.put("/update-location")
 def update_location(
-    new_location: str= Form(...),
+    new_lalitude: float= Form(...),
+    new_longitude: float= Form(...),
     access_token: str= Form(...)
     ):
     # Get the user from the database
@@ -183,11 +186,40 @@ def update_location(
     user:User|None=User.get_user_by_id(session,user_id)
     if user is None:
         raise HTTPException(status_code=401, detail="Invalid access token")
-    user.location = new_location
+    user.lalitude = new_lalitude
+    user.longitude = new_longitude
     session.commit()
     
     # Update the user in the database    
     return {"message": "Location changed successfully"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

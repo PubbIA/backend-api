@@ -41,8 +41,8 @@ class User(Base):
     date = Column(String(55), default=str(datetime.date.today()))
     time = Column(String(55), default=str(datetime.datetime.now().time()))
     profile_image = Column(String(400),default="")
-    location = Column(String(400),default="")
-    
+    lalitude = Column(Numeric(7),default=0)
+    longitude = Column(Numeric(7),default=0)
     # Define the relationship to the Operations table
     def set_password(self, password:str)->None:
         """
@@ -83,19 +83,7 @@ class User(Base):
         return decrypted_password
 
     @classmethod
-    def create_user(cls, session, username:str, email:str, password:str, phone_number:str,profile_image:str,id_:str,location:str, encryption_key:str)->bool:
-        """
-        Create a new user and add them to the database.
-
-        Parameters:
-            username (str): User's username.
-            email (str): User's email address.
-            password (str): User's password.
-            phone_number (str): User's phone number.
-            encryption_key (str): Encryption key to encrypt email password.
-        Returns:
-            bool: The user created or not.
-        """
+    def create_user(cls, session, username:str, email:str, password:str, phone_number:str,profile_image:str,id_:str,lalitude:float,longitude:float, encryption_key:str)->bool:
         user = session.query(cls).filter(cls.email == email).first()
         if user:
             return False
@@ -106,7 +94,8 @@ class User(Base):
             email=email,
             phone_number=phone_number,
             profile_image=profile_image if profile_image else "",
-            location = location if location else ""
+            lalitude = lalitude if lalitude else 0,
+            longitude = longitude if longitude else 0
         )
         # Set password and email password
         new_user.set_password(password)
