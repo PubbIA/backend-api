@@ -147,7 +147,7 @@ $ docker run -p you_port:5000 pubai
 
 ### `/docs` Endpoint
 
-- **URL**: `GET /docs`
+- **URL**: `GET /api/docs`
 - **Description**: Provides interactive API documentation using Swagger UI.
 - **Response**:
   - **Status Code**: `200 OK`

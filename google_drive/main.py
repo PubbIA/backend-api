@@ -15,7 +15,7 @@ import io
 from googleapiclient.errors import HttpError
 
 scope = ['https://www.googleapis.com/auth/drive']
-service_account_json_key = 'google-drive/credentials.json'
+service_account_json_key = 'google_drive/credentials.json'
 credentials = service_account.Credentials.from_service_account_file(
                               filename=service_account_json_key,
                               scopes=scope)
@@ -68,18 +68,14 @@ def upload_file_to_drive(file_path, folder_name,VALID_FORMATS:list=['jpg', 'jpeg
 
         # Get the URL of the file
         file_url = f"https://drive.google.com/uc?id={file_id}"
-
-        print(f'File ID: {file_id}')
-        print(f'File URL: {file_url}')
-
         return file_url
-    except HttpError as error:
+    except Exception as error:
         print('An error occurred: %s' % error)
-        return None
+        return ""
 
 
 
     
 if __name__=="__main__":
-   # print(upload_file_to_drive_url("docs/api-image.png","pubai",['jpg', 'jpeg', 'png']))
-   pass
+   print(upload_file_to_drive("docs/api-image.png","pubai",['jpg', 'jpeg', 'png']))
+   

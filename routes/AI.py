@@ -4,7 +4,7 @@ parent_dir = os.path.abspath(os.path.join(os.getcwd(), '.'))
 sys.path.append(parent_dir)
 
 from fastapi import (
-                    File, UploadFile, HTTPException,APIRouter
+                    File, UploadFile, HTTPException,APIRouter,Form
                     )   
 
 import shutil
@@ -44,3 +44,24 @@ async def save_image(image: UploadFile = File(...)):
 
     return {"class": predicted_class}
 
+@router.get("/face-recognition")
+async def get_user():
+    """
+    {
+        "exist":boolean,
+        "access_token":access_token
+    }
+    """
+    pass
+
+@router.post("/face-recognition/check")
+async def get_user(access_token:str=Form(...)):
+    pass
+
+@router.post("/chat")
+async def get_user(question:str=Form(...)):
+    pass
+
+@router.post("/quote")
+async def get_user(language:str=Form(...)):
+    pass

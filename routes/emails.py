@@ -22,7 +22,6 @@ from routes import (
 
 
 
-
 # Create a router for API endpoints
 router = APIRouter()
 

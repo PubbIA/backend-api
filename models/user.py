@@ -25,7 +25,7 @@ class User(Base):
         date (str): Date of the operation.
         time (str): Time of the operation.
         points (int): User's points.
-        avatar_base64 (str): Base64 encoded avatar image.
+        profile_image (str): url avatar image.
     """
 
 
@@ -41,6 +41,7 @@ class User(Base):
     date = Column(String(55), default=str(datetime.date.today()))
     time = Column(String(55), default=str(datetime.datetime.now().time()))
     profile_image = Column(String(400),default="")
+    
     # Define the relationship to the Operations table
     def set_password(self, password:str)->None:
         """
@@ -81,7 +82,7 @@ class User(Base):
         return decrypted_password
 
     @classmethod
-    def create_user(cls, session, username:str, email:str, password:str, phone_number:str, encryption_key:str)->bool:
+    def create_user(cls, session, username:str, email:str, password:str, phone_number:str,profile_image:str,id_:str, encryption_key:str)->bool:
         """
         Create a new user and add them to the database.
 
@@ -99,9 +100,11 @@ class User(Base):
             return False
         # Create a new user instance
         new_user = cls(
+            id=id_ if id_ else str(uuid.uuid4()),
             username=username,
             email=email,
             phone_number=phone_number,
+            profile_image=profile_image if profile_image else ""
         )
         # Set password and email password
         new_user.set_password(password)

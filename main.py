@@ -8,7 +8,7 @@ from fastapi import (
                     )   
 
 from fastapi.middleware.cors import CORSMiddleware
-from routes import users,emails,AI
+from routes import users,emails,AI,google_drive
 
 # Define API information
 api_info = {
@@ -18,7 +18,8 @@ api_info = {
     "contact": {
         "name": "LAAMIRI Ouail",
         "email": "laamiriouail@gmail.com"
-    }
+    },
+    "docs_url":"/api/docs"
 }
 
 # Create FastAPI instance with title, description, and author information
@@ -37,3 +38,4 @@ app.add_middleware(
 app.include_router(users.router,prefix="/api/users", tags=["users"])
 app.include_router(emails.router,prefix="/api/email", tags=["email"])
 app.include_router(AI.router,prefix="/api/ai", tags=["ai"])
+app.include_router(google_drive.router,prefix="/api/google-drive", tags=["google-drive"])
