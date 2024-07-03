@@ -11,7 +11,7 @@ import shutil
 from pathlib import Path
 
 from AI.CNN import garbage_classifier
-
+from AI.chatboot import get_random_quote
 from utils import create_folder
 
 
@@ -58,10 +58,10 @@ async def get_user():
 async def get_user(access_token:str=Form(...)):
     pass
 
-@router.post("/chat")
-async def get_user(question:str=Form(...)):
+@router.post("/chat/recyclage")
+async def get_recyclage_idea_(question:str=Form(...)):
     pass
 
-@router.post("/quote")
-async def get_user(language:str=Form(...)):
-    pass
+@router.post("/chat/quote")
+async def get_random_quote_(language:str=Form("English")):
+    return {"quote":get_random_quote(language=language)}
