@@ -6,9 +6,8 @@ sys.path.append(parent_dir)
 from fastapi import (
                     FastAPI
                     )   
-
 from fastapi.middleware.cors import CORSMiddleware
-from routes import users,emails,AI,google_drive,cashback,robots
+from routes import robot_logs, users,emails,AI,google_drive,cashback,robots
 
 # Define API information
 api_info = {
@@ -37,7 +36,8 @@ app.add_middleware(
 
 app.include_router(users.router,prefix="/api/users", tags=["Users"])
 app.include_router(emails.router,prefix="/api/email", tags=["Email"])
-app.include_router(AI.router,prefix="/api/ai", tags=["ai"])
+app.include_router(AI.router,prefix="/api/ai", tags=["Artificial intelligence"])
 app.include_router(cashback.router,prefix="/api/cashback", tags=["Cashback"])
 app.include_router(google_drive.router,prefix="/api/google-drive", tags=["Google drive"])
 app.include_router(robots.router,prefix="/api/robots", tags=["Robot"])
+app.include_router(robot_logs.router,prefix="/api/robot-logs", tags=["Robot Logs"])

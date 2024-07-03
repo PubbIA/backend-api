@@ -21,7 +21,7 @@ router = APIRouter()
 
 
 @router.post("/garbage-classifier")
-async def save_image(image: UploadFile = File(...)):
+async def grabage_classifier_(image: UploadFile = File(...)):
     # Check if the temporary folder exists, create it if not
     create_folder("temp")
     create_folder("data")

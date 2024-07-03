@@ -20,7 +20,7 @@ from routes import (
 from models.robot import Robot
 
 from typing import Union
-from models.logs import RobotLog
+from models.robot_logs import RobotLog
 
 # Create a router for API endpoints
 router = APIRouter()
@@ -90,10 +90,6 @@ async def get_all_robots():
         for robot in robots
     ]
     return robots_response
-
-
-
-
 
 @router.put("/update-info")
 async def update_robot_info(

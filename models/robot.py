@@ -10,7 +10,7 @@ sys.path.append(parent_dir)
 from database import Base
 import datetime
 from sqlalchemy.orm import relationship
-from models.logs import RobotLog
+from models.robot_logs import RobotLog
 
 
 # Define User model

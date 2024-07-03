@@ -1,8 +1,10 @@
 import uuid
 from sqlalchemy import Column, String, Numeric, Integer, ForeignKey, DateTime
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship,Session
 from database import Base
 import datetime
+from typing import List
+
 
 class RobotLog(Base):
     __tablename__ = 'robot_logs'
@@ -27,3 +29,10 @@ class RobotLog(Base):
         session.add(log_entry)
         session.commit()
         return True
+    @classmethod
+    def get_all_logs(cls, session: Session) -> List['RobotLog']:
+        return session.query(cls).all()
+
+    @classmethod
+    def get_logs_by_robot_id(cls, session: Session, robot_id: str) -> List['RobotLog']:
+        return session.query(cls).filter(cls.robot_id == robot_id).all()
