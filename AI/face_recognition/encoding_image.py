@@ -104,36 +104,47 @@ def write_encodings_to_csv(encodings_dict:dict, csv_filename:Path):
 
 def add_encoding_to_csv(image_name: str, encoding: np.ndarray, csv_filename: Path) -> bool:
     """
-    Add a new encoding to an existing CSV file.
+    Add a new encoding to an existing CSV file or update an existing encoding.
 
     Args:
         image_name (str): Name of the image.
-        encoding (np.ndarray): The encoding to be added.
+        encoding (np.ndarray): The encoding to be added or updated.
         csv_filename (Path): Path to the CSV file containing image encodings.
 
     Returns:
-        None
+        bool: True if the operation is successful, False otherwise.
     """
-    # Convert the encoding array to a string representation
+
     try:
-        # Check if the CSV file exists
-        if not csv_filename.exists():
-            # If the CSV file doesn't exist, create it and write the header
-            with open(csv_filename, mode='w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow(['Image Name', 'Encoding'])
-            print(f"Created CSV file: {csv_filename}")
+        updated = False
+        rows = []
 
-        # Append the new encoding to the CSV file
-        with open(csv_filename, mode='a', newline='') as file:
+        if csv_filename.exists():
+            with open(csv_filename, mode='r', newline='') as file:
+                reader = csv.reader(file)
+                header = next(reader, None)
+                for row in reader:
+                    if row[0] == image_name:
+                        row[1] = encoding
+                        updated = True
+                    rows.append(row)
+        else:
+            header = ['Image Name', 'Encoding']
+
+        if not updated:
+            rows.append([image_name, encoding])
+
+        with open(csv_filename, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([image_name, encoding])  # Convert the encoding array to a list
-        print(f"Encoding added to {csv_filename}")
-        return True
-    except Exception as e:
-        print(f"Error adding encoding to CSV: {e}")
-        return False
+            writer.writerow(header)
+            writer.writerows(rows)
 
+        print(f"Encoding added/updated in {csv_filename}")
+        return True
+
+    except Exception as e:
+        print(f"Error adding/updating encoding to CSV: {e}")
+        return False
 
 if __name__=="__main__":
     # Usage

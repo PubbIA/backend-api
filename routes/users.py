@@ -78,10 +78,6 @@ async def create_user(
             create_folder("data")
             # Create the path
             csv_filename = Path("data/encodings.csv")
-
-            # Check if the file exists, if not, create it
-            if not csv_filename.exists():
-                csv_filename.touch()
             # Save the uploaded image
             with open(f"temp/{user_profile.filename}", "wb") as buffer:
                 shutil.copyfileobj(user_profile.file, buffer)
