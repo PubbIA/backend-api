@@ -21,6 +21,10 @@ def predict(image_path, labels):
     model_path = 'AI/CNN/garbage_classifier/garbage_classifier.h5'  # Path to your trained model
     labels_:dict={"cardboard":0,"glass":2,"metal":3,"paper":1,"plastic":5,"trash":4}
 
+    # metal,glass => trash
+    # cardboard => paper
+    # plastic
+
     labels = {value:key for key,value in labels_.items()}  # Path to your labels file
 
     # Load model
