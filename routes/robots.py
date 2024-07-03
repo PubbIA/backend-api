@@ -15,9 +15,9 @@ from emails.main import (
 from utils.validity import (is_valid_email)
 from utils.generate import generate_random_code
 from routes import (
-    EMAIL_PROJECT,PASSWORD_EMAIL_PROJECT
+    session,FERNET_KEY
 )
-
+from models.robot import Robot
 
 
 
@@ -26,26 +26,14 @@ from routes import (
 router = APIRouter()
 
 
-@router.post("/send-verification-code")
-async def send_verification_email_code(to: str = Form(...),language:str = Form("fr"),length:int=Form(4),type_:str=Form("number")):
-    """
-    Send a verification code to the provided email address.
-    """
-    if not is_valid_email(to):
-        raise EmailException(detail="The email form is incorrect")
-    #Check the validity of email and password to connect to gmail
-    if not check_gmail_connection(EMAIL_PROJECT,PASSWORD_EMAIL_PROJECT):
-        raise EmailConnectionFailedException("Failed to connect to gmail.")
-    code_generated:str=generate_random_code(length,type_)
-    email_subject:str="Verification code"
-    email_body:str=f"<h1>Your code is {code_generated}</h1>"
-    is_send:bool=send_email_smtp(
-        sender_email=EMAIL_PROJECT,
-        sender_password=PASSWORD_EMAIL_PROJECT,
-        to=to,
-        email_subject=email_subject,
-        email_body=email_body
+@router.post("/")
+async def create_robot_(robotname: str = Form(...),password:str = Form(...),location:str=Form(...)):
+
+    is_created = Robot.create_robot(
+        session=session,robotname=robotname,
+        password=password,location=location,
+        encryption_key=FERNET_KEY
     )
 
-    return {"code":(code_generated if is_send else "")}  
+    return {"created":is_created}
     

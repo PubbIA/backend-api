@@ -53,11 +53,12 @@ class Robot(Base):
         return sha256_crypt.verify(password, self.password_hash)
     
     @classmethod
-    def create_robot(cls, session, username:str, password:str, id_:str,location:str, encryption_key:str)->bool:
+    def create_robot(cls, session, robotname:str, password:str,location:str, encryption_key:str)->bool:
+        if cls.check_password(password=password)==False:
+            return False
         # Create a new robot instance
         new_robot = cls(
-            id=id_ if id_ else str(uuid.uuid4()),
-            robotname=username,
+            robotname=robotname,
             location = location if location else ""
         )
         # Set password and email password
