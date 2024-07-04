@@ -135,19 +135,7 @@ class Robot(Base):
         return session.query(cls).all()
 
     @classmethod
-    def get_robots_near_point(cls, session, latitude: float, longitude: float, radius: float) -> List['Robot']:
-        """
-        Get robots near a specific point (latitude, longitude) within a given radius.
-
-        Parameters:
-            session: SQLAlchemy session object.
-            latitude (float): Latitude of the point.
-            longitude (float): Longitude of the point.
-            radius (float): Radius in kilometers.
-
-        Returns:
-            list: A list of robot objects near the specified point.
-        """
+    def get_robots_near_point(cls, session, latitude: float, longitude: float, radius: float) -> List[dict]:
         def haversine(lat1, lon1, lat2, lon2):
             R = 6371  # Earth radius in kilometers
             dlat = math.radians(lat2 - lat1)
@@ -157,6 +145,23 @@ class Robot(Base):
             return R * c
 
         all_robots = session.query(cls).all()
-        nearby_robots = [robot for robot in all_robots if haversine(latitude, longitude, float(robot.lalitude), float(robot.longitude)) <= radius]
+        nearby_robots = []
+        for robot in all_robots:
+            distance = haversine(latitude, longitude, float(robot.lalitude), float(robot.longitude))
+            if distance <= radius:
+                robot_details = {
+                    "id": robot.id,
+                    "robotname": robot.robotname,
+                    "date": robot.date,
+                    "time": robot.time,
+                    "lalitude": robot.lalitude,
+                    "longitude": robot.longitude,
+                    "power": robot.power,
+                    "plastique_percentage": robot.plastique_percentage,
+                    "trash_percentage": robot.trash_percentage,
+                    "cardboard_percentage": robot.cardboard_percentage,
+                    "distance": distance  # Include distance in the response
+                }
+                nearby_robots.append(robot_details)
 
         return nearby_robots

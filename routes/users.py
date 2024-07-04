@@ -199,6 +199,17 @@ def update_location(
 
 
 
+@router.get("/{user_id}")
+def get_user_by_id_(
+    user_id: str
+    ):
+    user:User|None=User.get_user_by_id(session,user_id)
+    if user is None:
+        raise HTTPException(status_code=401, detail="Invalid access token")
+    return {"username":user.username,"email":user.email,"phone_number":user.phone_number,
+            "points":user.points,"profile_image":user.profile_image,"lalitude":user.lalitude,
+            "longitude":user.longitude,"points_totale":user.points_totale}
+
 
 
 
