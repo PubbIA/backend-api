@@ -1,0 +1,5 @@
+.env
+pubai
+AI/computer_vision
+test.py
+AI/CNN/garbage_classifier/**.h5
