@@ -3,4 +3,4 @@ pubai
 AI/computer_vision
 test.py
 AI/CNN/garbage_classifier/**.h5
-AI/CNN/garbage_classifier/**.zip
+# AI/CNN/garbage_classifier/**.zip
