@@ -5,7 +5,7 @@ from tensorflow.keras.models import load_model
 # Define the label dictionary
 labels_ = {0: "cardboard", 1: "paper", 2: "glass", 3: "metal", 4: "trash", 5: "plastic"}
 
-def predict_image(model_path: str, image_path: str) -> str:
+def predict(image_path: str,model_path: str='AI/CNN/garbage_classifier/garbage_classifier.h5') -> str:
     # Load the model
     model = load_model(model_path)
     
@@ -39,5 +39,5 @@ if __name__=="__main__":
     image_path = 'AI/CNN/garbage_classifier/plastique.jpeg'
 
     # Predict class
-    predicted_label = predict_image(model_path, image_path)
+    predicted_label = predict(model_path, image_path)
     print(f'Predicted Class: {predicted_label}')
