@@ -11,7 +11,7 @@ import shutil
 from pathlib import Path
 
 from AI.CNN import garbage_classifier
-from AI.chatboot import get_random_quote
+from AI.chatboot import get_random_quote,get_recyclage_idea
 from utils import create_folder
 from AI.face_recognition.take_image import detect_person_with_face_eyes_nose_mouth
 from AI.face_recognition.compare_image import compare_face_use_csv_encoding,get_face_use_csv_encoding
@@ -133,9 +133,39 @@ async def check_between_photo_and_user_profile(access_token:str=Form(...),image:
 
     return {"valid_image": result}
 
+
+@router.post("/image-of-persone")
+async def check_if_a_personne_on_a_image(image: UploadFile = File(...)):
+    # Check if the temporary folder exists, create it if not
+    create_folder("temp")
+    create_folder("data")
+    # Create the path
+    csv_filename = Path("data/encodings.csv")
+
+    # Check if the file exists, if not, create it
+    if not csv_filename.exists():
+        csv_filename.touch()
+
+    # Check if the uploaded file has a valid image extension
+    allowed_extensions = ('.jpg', '.jpeg', '.png')
+    file_extension = Path(image.filename).suffix.lower()
+    if file_extension not in allowed_extensions:
+        raise HTTPException(status_code=400, detail="Invalid image format. Supported formats: jpg, jpeg, png")
+
+    # Save the uploaded image
+    with open(f"temp/{image.filename}", "wb") as buffer:
+        shutil.copyfileobj(image.file, buffer)
+    
+    # Perform image processing or any other operations here
+    # For example, you can call your computer vision functions here
+    valid_image:bool=detect_person_with_face_eyes_nose_mouth(Path(f"temp/{image.filename}"))
+
+    return {"valid_image":valid_image}
+
+
 @router.post("/chat/recyclage")
 async def get_recyclage_idea_(question:str=Form(...)):
-    pass
+    return {"idea":get_recyclage_idea(question=question)}
 
 @router.post("/chat/quote")
 async def get_random_quote_(language:str=Form("English")):

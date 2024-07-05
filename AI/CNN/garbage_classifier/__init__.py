@@ -23,12 +23,18 @@ def predict(image_path: str,model_path: str='AI/CNN/garbage_classifier/garbage_c
     
     # Get the class label
     class_label = labels_[predicted_class]
+    if class_label=="cardboard":
+        class_label="paper"
+    elif class_label=="glass":
+        class_label="plastic"
+    elif class_label=="trash":
+        class_label="metal"
     
     return class_label
 
-
+# paper , plastic , metal
 if __name__=="__main__":
-    model_path = 'AI/CNN/garbage_classifier/garbage_classifier.h5'  # Path to your trained model
+    model_path = 'AI/CNN/garbage_classifier/boundif1.h5'  # Path to your trained model
     # labels_:dict={"cardboard":0,"glass":2,"metal":3,"paper":1,"plastic":5,"trash":4}
 
     # labels = {value:key for key,value in labels_.items()}  # Path to your labels file
@@ -36,8 +42,8 @@ if __name__=="__main__":
     # Load model
     # model = load_model(model_path)
     # Example image path for prediction
-    image_path = 'AI/CNN/garbage_classifier/plastique.jpeg'
+    image_path = 'AI/CNN/garbage_classifier/plastic.jpg'
 
     # Predict class
-    predicted_label = predict(model_path, image_path)
+    predicted_label = predict( image_path,model_path)
     print(f'Predicted Class: {predicted_label}')
